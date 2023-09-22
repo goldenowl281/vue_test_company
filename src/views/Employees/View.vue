@@ -19,7 +19,7 @@
               <th>Action</th>
             </tr>
           </thead>
-          <tbody style="text-align: center;" v-if="this.employees.length > 0">
+          <tbody style="text-align: justify;" v-if="this.employees.length > 0">
             <tr v-for="(employee,index) in this.employees" :key="index">
               <td>{{ employee.id }}</td>
               <td>{{ employee.name}}</td>
@@ -27,9 +27,9 @@
               <td>{{ employee.phone }}</td>
               <td>{{ employee.company_name}}</td>
               <td>
-                <RouterLink to="/edit" class="btn btn-info">Edit</RouterLink>
+                <RouterLink :to="{ path: '/employee/'+'edit/'+employee.id }" class="btn btn-info">Edit</RouterLink>
                 <span style="margin-left: 10px; margin-right: 10px;"></span>
-                <button type="button" class="btn btn-danger">Delete</button>
+                <button type="button" @click="deleteEmployee(employee.id)" class="btn btn-danger">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -68,6 +68,16 @@ export default {
           .catch(error=>{
             console.error('error fetching employees', error);
           });
+    },
+    deleteEmployee(id) {
+      if(confirm("Are you sure, you want to delete?")) {
+        // console.log(id);
+        axios.delete(`http://localhost:8000/api/employees/${id}`)
+            .then(res => {
+              alert(res.data.message);
+              this.getEmployees();
+            })
+      }
     }
   },
 }
